@@ -1,5 +1,6 @@
 import numpy as np
 from functools import reduce
+from math import sqrt
 
 # initializing values
 delta_t = 0.08677 # measurements taken every 17 ms
@@ -16,20 +17,24 @@ for i in range(len(accel_hex_x)):
     accel_dec_y[i] = reduce(lambda x, y: x*16 + y, [int(char, 16) for char in accel_hex_y[i]])
     accel_dec_z[i] = reduce(lambda x, y: x*16 + y, [int(char, 16) for char in accel_hex_z[i]])
 
-
 print(accel_dec_x)
+print(accel_dec_y)
+print(accel_dec_z)
 
-accel_decimal = [12940, 12570, 12000] # matrix of decimal values of acceleration
-lsb_matrix = [16384, 16384, 16384] # LSB/g
+accel_decimal = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+for i in range(len(accel_hex_x)):
+    accel_decimal[i] = sqrt(accel_dec_x[i]^2 + accel_dec_y[i]^2 + accel_dec_z[i]^2) # magnitude of each acceleration vector
 
 # converting accelerations to m/s^2
+lsb_matrix = [16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384] # LSB/g
 accel_g = np.divide(accel_decimal,lsb_matrix) # in g
 accel_values = 9.81*accel_g # in m/s^2
 
 print(accel_values)
 
 # integrating into velocity
-vel_values = [0, 0, 0]
+vel_values = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 for i in range(len(accel_values) - 1):
     vel_values[i + 1] = delta_t*(accel_values[i] + accel_values[i + 1])/2
@@ -37,8 +42,15 @@ for i in range(len(accel_values) - 1):
 print(vel_values)
 
 # integrating into distance
-dist_values = [0, 0, 0]
+dist_values = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 for i in range(len(accel_values) - 1):
     dist_values[i + 1] = delta_t*(vel_values[i] + vel_values[i + 1])/2
 
 print(dist_values)
+
+sum = 0
+for i in range(len(dist_values)):
+    sum = sum + dist_values[i]
+total_distance = sum*100 #in cm
+
+print("Total distance travelled: " + str(total_distance))
