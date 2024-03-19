@@ -17,17 +17,14 @@ for i in range(len(accel_hex_x)):
     accel_dec_y[i] = reduce(lambda x, y: x*16 + y, [int(char, 16) for char in accel_hex_y[i]])
     accel_dec_z[i] = reduce(lambda x, y: x*16 + y, [int(char, 16) for char in accel_hex_z[i]])
 
-print(accel_dec_x)
-print(accel_dec_y)
-print(accel_dec_z)
-
 accel_decimal = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 for i in range(len(accel_hex_x)):
-    accel_decimal[i] = sqrt(accel_dec_x[i]^2 + accel_dec_y[i]^2 + accel_dec_z[i]^2) # magnitude of each acceleration vector
+    accel_decimal[i] = sqrt((accel_dec_x[i])**2+ (accel_dec_y[i])**2 + (accel_dec_z[i])**2) # magnitude of each acceleration vector
 
 # converting accelerations to m/s^2
 lsb_matrix = [16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384] # LSB/g
+#lsb_matrix = [8192, 8192, 8192, 8192, 8192, 8192, 8192, 8192, 8192, 8192, 8192, 8192, 8192, 8192, 8192, 8192, 8192, 8192, 8192, 8192, 8192, 8192, 8192, 8192, 8192]
 accel_g = np.divide(accel_decimal,lsb_matrix) # in g
 accel_values = 9.81*accel_g # in m/s^2
 
@@ -48,9 +45,6 @@ for i in range(len(accel_values) - 1):
 
 print(dist_values)
 
-sum = 0
-for i in range(len(dist_values)):
-    sum = sum + dist_values[i]
-total_distance = sum*100 #in cm
+total_distance = sum(dist_values) #in m
 
-print("Total distance travelled: " + str(total_distance))
+print("Total distance travelled: " + str(total_distance) + " m")
