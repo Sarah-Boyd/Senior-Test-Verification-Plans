@@ -1,4 +1,5 @@
-# Welcome to the IMU accelerometer test script! To proceed, please replace the following variables: 
+# Welcome to the IMU accelerometer test script! Note that integration methods were taken from https://makersportal.com/blog/calibration-of-an-inertial-measurement-unit-imu-with-raspberry-pi-part-ii
+# To proceed, please replace the following variables: 
 #   delta_t: the time difference between measurements, in seconds
 #   accel_hex_x: hexadecimal values of the x-axis accelerometer readings
 #   accel_hex_y: hexadecimal values of the y-axis accelerometer readings
