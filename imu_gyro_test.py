@@ -1,4 +1,5 @@
-# Welcome to the IMU gyroscope test script! To proceed, please replace the following variables: 
+# Welcome to the IMU gyroscope test script! Note that integration methods were taken from https://makersportal.com/blog/calibration-of-an-inertial-measurement-unit-imu-with-raspberry-pi-part-ii
+# To proceed, please replace the following variables: 
 #   delta_t: the time difference between measurements, in seconds
 #   vel_hex_x: hexadecimal values of the x-axis angular velocity readings
 #   vel_hex_y: hexadecimal values of the y-axis angular velocity readings
