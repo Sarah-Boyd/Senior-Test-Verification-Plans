@@ -11,7 +11,7 @@ from math import sqrt
 import matplotlib
 import matplotlib.pyplot as plt
 
-# initializing values
+# initializing values - values to be replaced by user
 delta_t = 0.087 # measurements taken every 87 ms
 accel_hex_x = ["E307", "2308", "F107", "F707", "EF07", "1208", "8607", "E307", "CD07", "EF07", "9107", "AE07", "1A08", "0D08", "F507", "E507", "0F08", "EB07", "0208", "FE07", "AC07", "F007", "3B08", "1C08", "D807"]
 accel_hex_y = ['3800', '4E01', '9201', 'DC01', 'CB01', 'AA01', '6101', '3901', '2E01', 'BF01', '5C01', 'BA01', 'A501', '9510', 'C401', 'B701', 'F301', '3C02', '4E02', '9701', '7601', '5802', '3402', '1F02', 'DF01']
@@ -38,56 +38,50 @@ dist_values_x = np.zeros(len(accel_hex_x))
 dist_values_y = np.zeros(len(accel_hex_x))
 dist_values_z = np.zeros(len(accel_hex_x))
 
-# converting acceleration measurements
+# filling in time and LSB/g arrays
 for i in range(len(time_array)):
     if i > 0:
         time_array[i] = time_array[i - 1] + delta_t
 
 for i in range(len(accel_hex_x)):
+    lsb_matrix[i] = lsb_value
+
+# converting acceleration measurements
+for i in range(len(accel_hex_x)): # converting from hexadecimal to decimal
     accel_dec_x[i] = reduce(lambda x, y: x*16 + y, [int(char, 16) for char in accel_hex_x[i]])
     accel_dec_y[i] = reduce(lambda x, y: x*16 + y, [int(char, 16) for char in accel_hex_y[i]])
     accel_dec_z[i] = reduce(lambda x, y: x*16 + y, [int(char, 16) for char in accel_hex_z[i]])
-'''
-for i in range(len(accel_hex_x)):
-    accel_decimal[i] = sqrt((accel_dec_x[i])**2+ (accel_dec_y[i])**2 + (accel_dec_z[i])**2) # magnitude of each acceleration vector
-'''
-for i in range(len(accel_hex_x)):
-    lsb_matrix[i] = lsb_value
-'''
-accel_g = np.divide(accel_decimal,lsb_matrix) # in g
-accel_values = 9.81*accel_g # in m/s^2
 
-# integrating into velocity
-for i in range(len(accel_values) - 1):
-    vel_values[i + 1] = delta_t*(accel_values[i] + accel_values[i + 1])/2
-
-# integrating into distance
-for i in range(len(accel_values) - 1):
-    dist_values[i + 1] = delta_t*(vel_values[i] + vel_values[i + 1])/2
-'''
-
-# different way
-accel_g_x = np.divide(accel_dec_x,lsb_matrix) # in g
+accel_g_x = np.divide(accel_dec_x,lsb_matrix) # converting to g
 accel_g_y = np.divide(accel_dec_y,lsb_matrix)
 accel_g_z = np.divide(accel_dec_z,lsb_matrix)
 
-accel_values_x = 9.81*accel_g_x # in m/s^2
+accel_values_x = 9.81*accel_g_x # converting to m/s^2
 accel_values_y = 9.81*accel_g_y
 accel_values_z = 9.81*accel_g_z
 
+# integrating to velocity
 for i in range(len(accel_values_x) - 1):
     vel_values_x[i + 1] = delta_t*(accel_values_x[i] + accel_values_x[i + 1])/2
     vel_values_y[i + 1] = delta_t*(accel_values_y[i] + accel_values_y[i + 1])/2
     vel_values_z[i + 1] = delta_t*(accel_values_z[i] + accel_values_z[i + 1])/2
 
+# integrating to distance
 for i in range(len(accel_values_x) - 1):
     dist_values_x[i + 1] = delta_t*(vel_values_x[i] + vel_values_x[i + 1])/2
     dist_values_y[i + 1] = delta_t*(vel_values_y[i] + vel_values_y[i + 1])/2
     dist_values_z[i + 1] = delta_t*(vel_values_z[i] + vel_values_z[i + 1])/2
 
+# printing total displacement
 total_distance_x = sum(dist_values_x)
 total_distance_y = sum(dist_values_y)
 total_distance_z = sum(dist_values_z)
+total_distance = sqrt(total_distance_x**2 + total_distance_y**2 + total_distance_z**2)
+
+print("Total displacement in the x-axis: " + str(total_distance_x) + " m")
+print("Total displacement in the y-axis: " + str(total_distance_y) + " m")
+print("Total displacement in the z-axis: " + str(total_distance_z) + " m")
+print("Total displacement magnitude: " + str(total_distance) + " m")
 
 # plotting results
 plot1 = plt.subplot2grid((3, 3), (0, 0), colspan=3) 
@@ -117,8 +111,4 @@ plot3.set_ylabel("Distance (m)")
 plot3.legend()
 
 plt.tight_layout() 
-plt.show() 
-
-print("Total distance travelled in the x-axis: " + str(total_distance_x) + " m")
-print("Total distance travelled in the y-axis: " + str(total_distance_y) + " m")
-print("Total distance travelled in the z-axis: " + str(total_distance_z) + " m")
+plt.show()
